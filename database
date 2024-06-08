@@ -1,1 +1,103 @@
+-- Create the Person table
+CREATE TABLE Person (
+  PersonID INT PRIMARY KEY AUTO_INCREMENT,
+  FirstName VARCHAR(50) NOT NULL,
+  MiddleName VARCHAR(50),
+  LastName VARCHAR(50) NOT NULL,
+  Email VARCHAR(100) UNIQUE NOT NULL,
+  PhoneNumber VARCHAR(20),
+  DateOfBirth DATE,
+  Address VARCHAR(255),
+  City VARCHAR(50),
+  Country VARCHAR(50) NOT NULL
+);
+
+-- Create the UserAccount table
+CREATE TABLE UserAccount (
+  UserID INT PRIMARY KEY,
+  PersonID INT UNIQUE,
+  Username VARCHAR(50) UNIQUE NOT NULL,
+  Password VARCHAR(255) NOT NULL,
+  UserType ENUM('Admin', 'Talent', 'Audience') NOT NULL,
+  FOREIGN KEY (PersonID) REFERENCES Person(PersonID)
+);
+
+-- Create the Talent table
+CREATE TABLE Talent (
+  TalentID INT PRIMARY KEY,
+  PersonID INT UNIQUE,
+  Category ENUM('Singing', 'Dancing', 'Acting/Comedy', 'Public Speaking') NOT NULL,
+  StageName VARCHAR(50),
+  Bio TEXT,
+  ParticipationReason TEXT,
+  Inspiration TEXT,
+  PreparednessLevel VARCHAR(50),
+  ImpactGoal TEXT,
+  InstrumentNeeded VARCHAR(50),
+  FOREIGN KEY (PersonID) REFERENCES Person(PersonID)
+);
+
+-- Create the Audience table
+CREATE TABLE Audience (
+  AudienceID INT PRIMARY KEY,
+  PersonID INT UNIQUE,
+  FOREIGN KEY (PersonID) REFERENCES Person(PersonID)
+);
+
+-- Create the Ticket table
+CREATE TABLE Ticket (
+  TicketID INT PRIMARY KEY AUTO_INCREMENT,
+  ShowID INT NOT NULL,
+  AudienceID INT NOT NULL,
+  TicketType ENUM('Regular', 'Classic', 'VIP') NOT NULL,
+  Price DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (ShowID) REFERENCES Show(ShowID),
+  FOREIGN KEY (AudienceID) REFERENCES Audience(AudienceID)
+);
+
+-- Create the Show table
+CREATE TABLE Show (
+  ShowID INT PRIMARY KEY AUTO_INCREMENT,
+  ShowName VARCHAR(255) NOT NULL,
+  ShowTime TIME,
+  ShowDate DATE NOT NULL,
+  Location VARCHAR(255) NOT NULL,
+  NameOfShow VARCHAR(255)
+);
+
+-- Create the Judges table
+CREATE TABLE Judges (
+  JudgeID INT PRIMARY KEY AUTO_INCREMENT,
+  JudegeName VARCHAR(255) NOT NULL,
+  Bio TEXT
+);
+
+-- Create the Performance table
+CREATE TABLE Performance (
+  PerformanceID INT PRIMARY KEY AUTO_INCREMENT,
+  ShowID INT NOT NULL,
+  ContestantID INT NOT NULL,
+  Rank INT,
+  videoURL VARCHAR(255),
+  FOREIGN KEY (ShowID) REFERENCES Show(ShowID),
+  FOREIGN KEY (ContestantID) REFERENCES Talent(TalentID)
+);
+
+-- Create the Sponsorship table
+CREATE TABLE Sponsorship (
+  SponsorshipID INT PRIMARY KEY AUTO_INCREMENT,
+  SponsorName VARCHAR(255) NOT NULL,
+  Description TEXT,
+  ShowID INT NOT NULL,
+  FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
+);
+
+-- Create a junction table for Many-to-Many relationship between Shows and Sponsors (if needed)
+CREATE TABLE ShowSponsorship (
+  ShowID INT NOT NULL,
+  SponsorshipID INT NOT NULL,
+  FOREIGN KEY (ShowID) REFERENCES Show(ShowID),
+  FOREIGN KEY (SponsorshipID) REFERENCES Sponsorship(SponsorshipID),
+  PRIMARY KEY (ShowID, SponsorshipID)
+);
 
