@@ -34,7 +34,10 @@ CREATE TABLE Talent (
   PreparednessLevel VARCHAR(50),
   ImpactGoal TEXT,
   InstrumentNeeded VARCHAR(50),
-  MediaPath VARCHAR(255),  -- Stores path/URL for contestant photo & video
+  --stores the photo of the contestant
+  VideoFile VARCHAR (200) NOT NULL, 
+  --stores the sample talent video of the contestant
+  PictureFile VARCHAR (200) NOT NULL,
   FOREIGN KEY (PersonID) REFERENCES Person(PersonID)
 );
 
